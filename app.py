@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from starlette.middleware.sessions import SessionMiddleware
+
 from auth.routes import router as auth_router
-from config import PORT
+from config import PORT, SESSION_SECRET_KEY
 from routes.chat_routes import router
 
 
@@ -11,6 +13,14 @@ def create_app() -> FastAPI:
         title="Multi-Agent Model API",
         description="FastAPI Backend for Langflow Multi-Agent Model",
         version="1.0.0",
+    )
+
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=SESSION_SECRET_KEY,
+        session_cookie="session",
+        same_site="lax",
+        https_only=False,
     )
 
     app.add_middleware(
