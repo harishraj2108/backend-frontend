@@ -3,6 +3,7 @@ import re
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+# pyrefly: ignore [missing-import]
 from groq import Groq
 
 from config import settings

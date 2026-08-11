@@ -1,7 +1,8 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / ".env", override=True)
 
 LANGFLOW_URL = os.getenv("LANGFLOW_URL", "")
 API_KEY = os.getenv("SCRAPEGRAPH_API_KEY", "")
