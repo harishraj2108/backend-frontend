@@ -60,12 +60,17 @@ def get_current_user(
 @router.get("/google/login")
 def start_google_login(request: Request, redirect: bool = Query(True)):
     """Start Google OAuth 2.0 flow by generating random state and building auth URL."""
-    state = secrets.token_urlsafe(32)
-    request.session["oauth_state"] = state
-    authorization_url = build_google_authorization_url(state)
-    if redirect:
-        return RedirectResponse(authorization_url)
-    return {"authorization_url": authorization_url}
+    try:
+        state = secrets.token_urlsafe(32)
+        request.session["oauth_state"] = state
+        authorization_url = build_google_authorization_url(state)
+        if redirect:
+            return RedirectResponse(authorization_url)
+        return {"authorization_url": authorization_url}
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Failed to initialize Google login: {str(exc)}") from exc
 
 
 @router.get("/google/callback")

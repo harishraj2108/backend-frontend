@@ -5,9 +5,12 @@ __pycache__/
 .venv/
 env/
 venv/
+chroma_db/
+repos/
 
 # Environment variables
 .env
+.env.example
 
 # IDE / OS
 .DS_Store

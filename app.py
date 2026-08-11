@@ -6,12 +6,13 @@ from starlette.middleware.sessions import SessionMiddleware
 from auth.routes import router as auth_router
 from config import PORT, SESSION_SECRET_KEY
 from routes.chat_routes import router
+from routes.rag_routes import router as rag_router
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Multi-Agent Model API",
-        description="FastAPI Backend for Langflow Multi-Agent Model",
+        description="FastAPI Backend for Langflow Multi-Agent Model & Multimodal GitHub RAG",
         version="1.0.0",
     )
 
@@ -33,6 +34,7 @@ def create_app() -> FastAPI:
 
     app.include_router(router, tags=["chat"])
     app.include_router(auth_router, tags=["auth"])
+    app.include_router(rag_router, tags=["rag"])
     return app
 
 

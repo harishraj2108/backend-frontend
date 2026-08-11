@@ -3,6 +3,16 @@ uvicorn
 pydantic
 requests
 python-dotenv
+pyjwt
+cryptography
 authlib
+fastapi
+uvicorn
+pydantic
+requests
+python-dotenv
 itsdangerous
 PyJWT
+chromadb
+groq
+sentence-transformers
