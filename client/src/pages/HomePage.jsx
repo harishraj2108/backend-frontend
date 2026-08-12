@@ -279,7 +279,7 @@ export default function HomePage({ navigate }) {
           pointerEvents: 'none',
         }} />
 
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0', display: 'flex', alignItems: 'center', gap: '4rem', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           {/* Left content */}
           <div style={{ flex: 1, minWidth: 300 }}>
             <div className="animate-slide-up" style={{
@@ -367,7 +367,7 @@ export default function HomePage({ navigate }) {
 
       {/* HOW IT WORKS */}
       <section id="how-it-works" style={{ padding: '6rem 0', position: 'relative' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>
               WORKFLOW
@@ -408,7 +408,7 @@ export default function HomePage({ navigate }) {
 
       {/* FEATURES */}
       <section style={{ padding: '6rem 0', background: 'var(--muted)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', color: 'var(--accent)', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>
               CAPABILITIES
@@ -444,7 +444,7 @@ export default function HomePage({ navigate }) {
 
       {/* DEVOPS Q&A SECTION */}
       <section style={{ padding: '6rem 0' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center' }}>
           <div>
             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', color: 'var(--primary)', marginBottom: '0.75rem', letterSpacing: '0.1em' }}>
               INTELLIGENCE
@@ -514,7 +514,7 @@ export default function HomePage({ navigate }) {
 
       {/* CTA */}
       <section style={{ padding: '6rem 0', background: 'var(--muted)', textAlign: 'center' }}>
-        <div style={{ maxWidth: '700px', margin: '0 auto', padding: '0 1.5rem' }}>
+        <div style={{ maxWidth: '700px', margin: '0 auto', padding: '0' }}>
           <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--foreground)', marginBottom: '1.25rem' }}>
             Ready to Eliminate<br />
             <span className="gradient-text">Manual Incident Response?</span>

@@ -39,7 +39,16 @@ def chat_with_langflow(message: str, session_id: str) -> ChatResponse:
         "session_id": session_id,
     }
 
-    response = requests.post(LANGFLOW_URL, json=payload, headers=HEADERS, timeout=60)
+    # Programmatically convert UI flow URL to API run URL if /flow/ is supplied
+    target_url = LANGFLOW_URL
+    if "/flow/" in target_url:
+        target_url = target_url.replace("/flow/", "/api/v1/run/")
+
+    print(f"[DEBUG Langflow Call] URL: {target_url}")
+    print(f"[DEBUG Langflow Call] Headers: {HEADERS}")
+    print(f"[DEBUG Langflow Call] Payload: {payload}")
+
+    response = requests.post(target_url, json=payload, headers=HEADERS, timeout=60)
     response.raise_for_status()
 
     try:

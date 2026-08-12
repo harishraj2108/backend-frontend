@@ -16,7 +16,7 @@ export default function LoginPage({ navigate, onLogin }) {
       justifyContent: 'center',
       position: 'relative',
       overflow: 'hidden',
-      padding: '2rem',
+      padding: '2rem 0',
     }}>
       {/* BG effects */}
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(0,212,255,0.06) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(168,85,247,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />

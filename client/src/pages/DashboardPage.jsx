@@ -21,7 +21,7 @@ export default function DashboardPage({ navigate, user }) {
   ]
 
   return (
-    <div style={{ minHeight: '100vh', padding: '6rem 1.5rem 3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ minHeight: '100vh', padding: '6rem 0 3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
       {/* BG */}
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 0%, rgba(0,212,255,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
 

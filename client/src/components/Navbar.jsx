@@ -30,7 +30,7 @@ export default function Navbar({ theme, toggleTheme, currentPage, navigate, isLo
         padding: '1rem 0',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Logo */}
         <div
           onClick={() => navigate('home')}
@@ -52,8 +52,22 @@ export default function Navbar({ theme, toggleTheme, currentPage, navigate, isLo
         {/* Desktop Nav */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
           <div style={{ display: 'flex', gap: '1.75rem', alignItems: 'center' }}>
-            {['Features', 'How It Works', 'Architecture'].map(item => (
-              <span key={item} className="nav-link">{item}</span>
+            {[
+              { label: 'Dashboard', page: 'dashboard' },
+              { label: 'Incident Chat', page: 'incident-chat' },
+              { label: 'Repo Analysis', page: 'repo-analysis' }
+            ].map(item => (
+              <span
+                key={item.label}
+                className="nav-link"
+                style={{
+                  fontWeight: currentPage === item.page ? '600' : '500',
+                  color: currentPage === item.page ? 'var(--primary)' : 'var(--muted-foreground)'
+                }}
+                onClick={() => navigate(item.page)}
+              >
+                {item.label}
+              </span>
             ))}
             {currentPage !== 'home' && (
               <span

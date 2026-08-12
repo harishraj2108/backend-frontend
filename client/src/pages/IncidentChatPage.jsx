@@ -500,22 +500,10 @@ export default function IncidentChatPage({ navigate, user }) {
             </div>
             <div style={{ fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', color: '#22c55e', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-              5 Agents Ready
+              4 Agents up
             </div>
           </div>
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.5rem' }}>
-            {['Triage', 'Diagnose', 'Remediate'].map((a, i) => (
-              <span key={a} style={{
-                fontSize: '0.7rem',
-                fontFamily: 'JetBrains Mono, monospace',
-                padding: '0.2rem 0.6rem',
-                borderRadius: 4,
-                background: 'rgba(0, 212, 255, 0.08)',
-                border: '1px solid rgba(0, 212, 255, 0.15)',
-                color: 'var(--primary)',
-              }}>{a}</span>
-            ))}
-          </div>
+          
         </div>
 
         {/* Messages */}
