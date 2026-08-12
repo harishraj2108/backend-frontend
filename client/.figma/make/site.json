@@ -1,0 +1,10 @@
+{
+  "description": "This platform enables DevOps professionals to analyze GitHub repositories and share incidents through an interactive chatbot interface, enhancing incident response efficiency.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
