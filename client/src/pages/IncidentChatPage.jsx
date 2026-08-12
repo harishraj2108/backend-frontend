@@ -13,7 +13,7 @@ function formatMessage(text) {
   })
 }
 
-export default function IncidentChatPage({ navigate, user }) {
+export default function IncidentChatPage({ navigate, user, initialSessionId, clearInitialSessionId, backTarget }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
@@ -45,8 +45,13 @@ export default function IncidentChatPage({ navigate, user }) {
 
   useEffect(() => {
     fetchHistory()
-    showWelcomeMessage()
-  }, [])
+    if (initialSessionId) {
+      loadSession(initialSessionId)
+      clearInitialSessionId()
+    } else {
+      showWelcomeMessage()
+    }
+  }, [initialSessionId])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -232,7 +237,7 @@ export default function IncidentChatPage({ navigate, user }) {
         {/* Sidebar Header */}
         <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border)' }}>
           <button
-            onClick={() => navigate('dashboard')}
+            onClick={() => navigate(backTarget || 'dashboard')}
             style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '1rem', padding: 0 }}
             onMouseEnter={e => e.target.style.color = 'var(--primary)'}
             onMouseLeave={e => e.target.style.color = 'var(--muted-foreground)'}
@@ -480,7 +485,7 @@ export default function IncidentChatPage({ navigate, user }) {
           zIndex: 10,
         }}>
           <button
-            onClick={() => navigate('dashboard')}
+            onClick={() => navigate(backTarget || 'dashboard')}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted-foreground)', fontSize: '1.1rem', padding: '0.25rem', lineHeight: 1 }}
             title="Back"
           >←</button>

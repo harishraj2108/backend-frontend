@@ -47,7 +47,7 @@ def create_session_endpoint(request: CreateSessionRequest, user: dict = Depends(
 
 
 @router.get("/api/chat/history")
-def get_history_endpoint(chat_type: str, user: dict = Depends(get_current_user)):
+def get_history_endpoint(chat_type: Optional[str] = None, user: dict = Depends(get_current_user)):
     user_id = user.get("google_id") or user.get("sub")
     history = get_user_chat_history(user_id=user_id, chat_type=chat_type)
     return {"success": True, "sessions": history}

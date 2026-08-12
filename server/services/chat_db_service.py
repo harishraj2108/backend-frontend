@@ -87,14 +87,18 @@ def add_chat_message(session_id: str, role: str, text: str, user_id: str = None,
         
     return session_id
 
-def get_user_chat_history(user_id: str, chat_type: str) -> list:
+def get_user_chat_history(user_id: str, chat_type: str = None) -> list:
     """Return a list of chat sessions associated with the user, sorted by updated_at descending."""
     if db is None:
         return []
         
     try:
+        query = {"user_id": user_id}
+        if chat_type:
+            query["chat_type"] = chat_type
+
         cursor = db.chats.find(
-            {"user_id": user_id, "chat_type": chat_type},
+            query,
             {"_id": 0, "session_id": 1, "chat_type": 1, "repo_name": 1, "title": 1, "created_at": 1, "updated_at": 1}
         ).sort("updated_at", -1)
         

@@ -5,12 +5,15 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import IncidentChatPage from './pages/IncidentChatPage'
 import RepoAnalysisPage from './pages/RepoAnalysisPage'
+import RecentActivityPage from './pages/RecentActivityPage'
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('ma-theme') || 'dark')
   const [page, setPage] = useState('home')
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [selectedSessionId, setSelectedSessionId] = useState(null)
+  const [backTarget, setBackTarget] = useState('dashboard')
 
   useEffect(() => {
     document.documentElement.className = theme === 'light' ? 'light' : ''
@@ -46,12 +49,21 @@ export default function App() {
   const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark')
 
   const navigate = (target) => {
-    if ((target === 'dashboard' || target === 'incident-chat' || target === 'repo-analysis') && !user) {
+    if ((target === 'dashboard' || target === 'incident-chat' || target === 'repo-analysis' || target === 'recent-activity') && !user) {
       setPage('login')
       return
     }
+    if (target !== 'repo-analysis' && target !== 'incident-chat') {
+      setBackTarget('dashboard')
+    }
     setPage(target)
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const navigateToSession = (sessionId, chatType) => {
+    setSelectedSessionId(sessionId)
+    setBackTarget('recent-activity')
+    navigate(chatType === 'repo' ? 'repo-analysis' : 'incident-chat')
   }
 
   const onLogin = (userData) => setUser(userData)
@@ -141,8 +153,30 @@ export default function App() {
       {page === 'home' && <HomePage navigate={navigate} />}
       {page === 'login' && <LoginPage navigate={navigate} onLogin={onLogin} />}
       {page === 'dashboard' && <DashboardPage navigate={navigate} user={user} />}
-      {page === 'incident-chat' && <IncidentChatPage navigate={navigate} user={user} />}
-      {page === 'repo-analysis' && <RepoAnalysisPage navigate={navigate} user={user} />}
+      {page === 'incident-chat' && (
+        <IncidentChatPage
+          navigate={navigate}
+          user={user}
+          initialSessionId={selectedSessionId}
+          clearInitialSessionId={() => setSelectedSessionId(null)}
+          backTarget={backTarget}
+        />
+      )}
+      {page === 'repo-analysis' && (
+        <RepoAnalysisPage
+          navigate={navigate}
+          user={user}
+          initialSessionId={selectedSessionId}
+          clearInitialSessionId={() => setSelectedSessionId(null)}
+          backTarget={backTarget}
+        />
+      )}
+      {page === 'recent-activity' && (
+        <RecentActivityPage
+          navigate={navigate}
+          navigateToSession={navigateToSession}
+        />
+      )}
     </div>
   )
 }

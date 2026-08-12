@@ -13,7 +13,7 @@ function formatMessage(text) {
   })
 }
 
-export default function RepoAnalysisPage({ navigate, user }) {
+export default function RepoAnalysisPage({ navigate, user, initialSessionId, clearInitialSessionId, backTarget }) {
   const [step, setStep] = useState('url') // 'url' | 'chat'
   const [repoUrl, setRepoUrl] = useState('')
   const [repoName, setRepoName] = useState('')
@@ -50,7 +50,11 @@ export default function RepoAnalysisPage({ navigate, user }) {
 
   useEffect(() => {
     fetchHistory()
-  }, [])
+    if (initialSessionId) {
+      loadSession(initialSessionId)
+      clearInitialSessionId()
+    }
+  }, [initialSessionId])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -260,7 +264,7 @@ export default function RepoAnalysisPage({ navigate, user }) {
         {/* Sidebar Header */}
         <div style={{ padding: '1.25rem', borderBottom: '1px solid var(--border)' }}>
           <button
-            onClick={() => navigate('dashboard')}
+            onClick={() => navigate(backTarget || 'dashboard')}
             style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer', fontFamily: 'Inter, sans-serif', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '1rem', padding: 0 }}
             onMouseEnter={e => e.target.style.color = 'var(--accent)'}
             onMouseLeave={e => e.target.style.color = 'var(--muted-foreground)'}

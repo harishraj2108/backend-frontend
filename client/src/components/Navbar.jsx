@@ -20,17 +20,22 @@ export default function Navbar({ theme, toggleTheme, currentPage, navigate, isLo
         right: 0,
         zIndex: 1000,
         transition: 'all 0.3s ease',
-        background: scrolled
-          ? theme === 'dark'
-            ? 'rgba(6, 11, 20, 0.92)'
-            : 'rgba(240, 244, 255, 0.92)'
-          : 'transparent',
-        backdropFilter: scrolled ? 'blur(16px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border)' : 'none',
-        padding: '1rem 0',
+        background: theme === 'dark'
+          ? scrolled
+            ? 'rgba(13, 22, 35, 0.95)'
+            : 'rgba(13, 22, 35, 0.82)'
+          : scrolled
+            ? 'rgba(255, 255, 255, 0.95)'
+            : 'rgba(255, 255, 255, 0.82)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid var(--border)',
+        boxShadow: theme === 'dark'
+          ? scrolled ? '0 4px 20px rgba(0,0,0,0.4)' : '0 2px 10px rgba(0,0,0,0.2)'
+          : scrolled ? '0 4px 20px rgba(0,0,0,0.08)' : '0 2px 10px rgba(0,0,0,0.04)',
+        padding: scrolled ? '0.75rem 0' : '1rem 0',
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Logo */}
         <div
           onClick={() => navigate('home')}
@@ -55,7 +60,8 @@ export default function Navbar({ theme, toggleTheme, currentPage, navigate, isLo
             {[
               { label: 'Dashboard', page: 'dashboard' },
               { label: 'Incident Chat', page: 'incident-chat' },
-              { label: 'Repo Analysis', page: 'repo-analysis' }
+              { label: 'Repo Analysis', page: 'repo-analysis' },
+              { label: 'Recent Activity', page: 'recent-activity' }
             ].map(item => (
               <span
                 key={item.label}
@@ -69,15 +75,7 @@ export default function Navbar({ theme, toggleTheme, currentPage, navigate, isLo
                 {item.label}
               </span>
             ))}
-            {currentPage !== 'home' && (
-              <span
-                className="nav-link"
-                onClick={() => navigate('home')}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-              >
-                ← Home
-              </span>
-            )}
+
           </div>
 
           {/* Theme toggle */}

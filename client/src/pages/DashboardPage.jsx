@@ -42,7 +42,7 @@ export default function DashboardPage({ navigate, user }) {
             color: 'var(--primary)',
           }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00d4ff', display: 'inline-block' }} />
-            NexAgent · 5 Agents Active · All Systems Operational
+            NexAgent · 5 Agents up · All Systems Operational
           </div>
           <h1 style={{
             fontFamily: 'Syne, sans-serif',
@@ -159,28 +159,6 @@ export default function DashboardPage({ navigate, user }) {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Recent activity bar */}
-        <div className="glass" style={{ borderRadius: 12, padding: '1.25rem 1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-            <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: 'var(--muted-foreground)' }}>RECENT ACTIVITY</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            {[
-              { text: 'DB latency incident resolved — MTTR: 28s', time: '2m ago', color: '#22c55e' },
-              { text: 'github.com/myorg/api-service — analysis complete', time: '14m ago', color: '#a855f7' },
-              { text: 'Kubernetes OOMKilled event detected in staging', time: '1h ago', color: '#f59e0b' },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.85rem', color: 'var(--card-foreground)' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, display: 'inline-block' }} />
-                  <span style={{ fontFamily: 'Inter, sans-serif' }}>{item.text}</span>
-                </div>
-                <span style={{ fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>{item.time}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>
