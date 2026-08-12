@@ -2,7 +2,7 @@ export default function DashboardPage({ navigate, user }) {
   const options = [
     {
       id: 'incident',
-      icon: '🚨',
+      icon: 'IR',
       title: 'Share a DevOps Incident',
       desc: 'Describe an incident and let our multi-agent system analyse, diagnose, and recommend autonomous remediation steps.',
       accent: '#00d4ff',
@@ -11,7 +11,7 @@ export default function DashboardPage({ navigate, user }) {
     },
     {
       id: 'repo',
-      icon: '🔍',
+      icon: 'QA',
       title: 'Analyse GitHub Repository',
       desc: 'Provide a GitHub repository URL and get deep analysis of code quality, security vulnerabilities, CI/CD configuration, and DevOps best practices.',
       accent: '#a855f7',
@@ -67,7 +67,7 @@ export default function DashboardPage({ navigate, user }) {
               onClick={opt.action}
               style={{
                 background: 'var(--card)',
-                border: `1px solid ${opt.accent}20`,
+                border: '1px solid ' + opt.accent + '20',
                 borderRadius: 16,
                 padding: '2rem',
                 cursor: 'pointer',
@@ -76,12 +76,12 @@ export default function DashboardPage({ navigate, user }) {
                 overflow: 'hidden',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.borderColor = `${opt.accent}50`
+                e.currentTarget.style.borderColor = opt.accent + '50'
                 e.currentTarget.style.transform = 'translateY(-6px)'
-                e.currentTarget.style.boxShadow = `0 24px 60px rgba(0,0,0,0.3), 0 0 40px ${opt.accent}10`
+                e.currentTarget.style.boxShadow = '0 24px 60px rgba(0,0,0,0.3), 0 0 40px ' + opt.accent + '10'
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.borderColor = `${opt.accent}20`
+                e.currentTarget.style.borderColor = opt.accent + '20'
                 e.currentTarget.style.transform = 'translateY(0)'
                 e.currentTarget.style.boxShadow = 'none'
               }}
@@ -93,7 +93,7 @@ export default function DashboardPage({ navigate, user }) {
                 right: 0,
                 width: 120,
                 height: 120,
-                background: `radial-gradient(circle at top right, ${opt.accent}12, transparent 70%)`,
+                background: 'radial-gradient(circle at top right, ' + opt.accent + '12, transparent 70%)',
                 borderRadius: '0 16px 0 0',
               }} />
 
@@ -101,13 +101,15 @@ export default function DashboardPage({ navigate, user }) {
               <div style={{
                 width: 56,
                 height: 56,
-                background: `${opt.accent}14`,
-                border: `1px solid ${opt.accent}25`,
+                background: opt.accent + '14',
+                border: '1px solid ' + opt.accent + '25',
                 borderRadius: 14,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.7rem',
+                fontSize: '1rem',
+                fontWeight: 700,
+                color: opt.accent,
                 marginBottom: '1.25rem',
               }}>
                 {opt.icon}
@@ -131,8 +133,8 @@ export default function DashboardPage({ navigate, user }) {
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
                 {opt.tags.map(tag => (
                   <span key={tag} style={{
-                    background: `${opt.accent}10`,
-                    border: `1px solid ${opt.accent}20`,
+                    background: opt.accent + '10',
+                    border: '1px solid ' + opt.accent + '20',
                     borderRadius: 4,
                     padding: '0.2rem 0.6rem',
                     fontSize: '0.72rem',
@@ -166,13 +168,13 @@ export default function DashboardPage({ navigate, user }) {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
             {[
-              { icon: '✅', text: 'DB latency incident resolved — MTTR: 28s', time: '2m ago', color: '#22c55e' },
-              { icon: '🔍', text: 'github.com/myorg/api-service — analysis complete', time: '14m ago', color: '#a855f7' },
-              { icon: '⚠️', text: 'Kubernetes OOMKilled event detected in staging', time: '1h ago', color: '#f59e0b' },
+              { text: 'DB latency incident resolved — MTTR: 28s', time: '2m ago', color: '#22c55e' },
+              { text: 'github.com/myorg/api-service — analysis complete', time: '14m ago', color: '#a855f7' },
+              { text: 'Kubernetes OOMKilled event detected in staging', time: '1h ago', color: '#f59e0b' },
             ].map((item, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.85rem', color: 'var(--card-foreground)' }}>
-                  <span>{item.icon}</span>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: item.color, display: 'inline-block' }} />
                   <span style={{ fontFamily: 'Inter, sans-serif' }}>{item.text}</span>
                 </div>
                 <span style={{ fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>{item.time}</span>

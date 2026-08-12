@@ -1,13 +1,15 @@
 import os
 import re
 from typing import Optional
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 # pyrefly: ignore [missing-import]
 from groq import Groq
 
 from config import settings
 from services.rag import CodebaseIndexer, CodebaseQA
+from auth.routes import get_current_user
+from services.chat_db_service import create_chat_session, add_chat_message
 
 router = APIRouter(prefix="/api/rag", tags=["rag"])
 
@@ -33,6 +35,7 @@ class QueryRAGRequest(BaseModel):
     message: Optional[str] = None
     image_base64: Optional[str] = None
     n_results: Optional[int] = 6
+    session_id: Optional[str] = None
 
 def slugify(text: str) -> str:
     text = re.sub(r"[^a-zA-Z0-9_-]+", "_", text.strip())
@@ -85,12 +88,11 @@ def list_indexed_repos():
         raise HTTPException(status_code=500, detail=f"Failed to list repositories: {str(e)}")
 
 @router.post("/query")
-def query_codebase_rag(request: QueryRAGRequest):
+def query_codebase_rag(request: QueryRAGRequest, user: dict = Depends(get_current_user)):
     """Multimodal Q&A query over an indexed codebase using Groq API."""
     try:
-        if not settings.GROQ_API_KEY:
-            raise HTTPException(status_code=400, detail="GROQ_API_KEY is missing in .env")
-            
+        user_id = user.get("google_id") or user.get("sub")
+        
         query_text = (request.question or request.message or "").strip()
         if not query_text:
             raise HTTPException(status_code=400, detail="Question is required. Pass 'question' or 'message' field.")
@@ -104,6 +106,17 @@ def query_codebase_rag(request: QueryRAGRequest):
                 raise HTTPException(status_code=400, detail="No indexed repositories found. Please index a repository first using /api/rag/index.")
                 
         repo_name = slugify(target_repo)
+        
+        session_id = request.session_id
+        if not session_id:
+            session_id = create_chat_session(user_id=user_id, chat_type="repo", repo_name=repo_name)
+            
+        # Log user message to database
+        add_chat_message(session_id=session_id, role="user", text=query_text, user_id=user_id, chat_type="repo")
+        
+        if not settings.GROQ_API_KEY:
+            raise HTTPException(status_code=400, detail="GROQ_API_KEY is missing in .env")
+            
         qa = CodebaseQA(
             chroma_client=get_indexer().client,
             collection_name=repo_name,
@@ -139,9 +152,13 @@ def query_codebase_rag(request: QueryRAGRequest):
             stream_gen, _ = qa.ask(question=query_text, n_results=request.n_results or 6)
             answer_text = "".join([chunk["message"]["content"] for chunk in stream_gen])
             
+        # Log bot response to database
+        add_chat_message(session_id=session_id, role="bot", text=answer_text, user_id=user_id, chat_type="repo")
+            
         return {
             "success": True,
             "repo_name": repo_name,
+            "session_id": session_id,
             "answer": answer_text,
             "sources": chunks
         }

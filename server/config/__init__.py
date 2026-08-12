@@ -9,4 +9,6 @@ from .settings import (
     SESSION_SECRET_KEY,
     JWT_SECRET_KEY,
     JWT_ALGORITHM,
+    FRONTEND_URL,
+    MONGODB_URI,
 )

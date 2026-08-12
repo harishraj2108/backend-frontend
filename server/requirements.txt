@@ -10,3 +10,6 @@ itsdangerous
 chromadb
 groq
 sentence-transformers
+pymongo
+dnspython
+email-validator

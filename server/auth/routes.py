@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import secrets
 from typing import Optional
+from config import FRONTEND_URL
 
 from auth.schemas import GoogleOAuthCallbackRequest, GoogleOAuthStartResponse, TokenResponse
 from auth.service import (
@@ -12,49 +13,22 @@ from auth.service import (
     create_access_token,
     verify_token,
 )
+from models.user_model import upsert_google_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 security = HTTPBearer(bearerFormat="JWT", auto_error=False)
 
 
-def get_current_user(
-    request: Request,
-    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
-) -> dict:
-    """Reusable dependency to authenticate requests using header token, cookie token, or session."""
-    # 1. Try to extract from Authorization header
-    if credentials:
-        try:
-            payload = verify_token(credentials.credentials)
-            return payload
-        except ValueError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Invalid or expired token: {str(exc)}",
-            ) from exc
-
-    # 2. Try to extract from HttpOnly cookie
-    cookie_token = request.cookies.get("access_token")
-    if cookie_token:
-        try:
-            payload = verify_token(cookie_token)
-            return payload
-        except ValueError as exc:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=f"Invalid or expired cookie token: {str(exc)}",
-            ) from exc
-
-    # 3. Try to check Starlette session
-    session_user = request.session.get("user")
-    if session_user:
-        return session_user
-
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Not authenticated",
-    )
+def get_current_user(request: Request) -> dict:
+    """Reusable dependency to authenticate requests. Reads user from request state (populated by middleware)."""
+    user = getattr(request.state, "user", None)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+        )
+    return user
 
 
 @router.get("/google/login")
@@ -87,20 +61,13 @@ def google_callback(request: Request, code: str = Query(...), state: str = Query
             raise HTTPException(status_code=400, detail="No ID token returned from Google")
 
         user_info = validate_google_id_token(id_token)
-        app_token = create_access_token(user_info["sub"], email=user_info.get("email"))
+        db_user = upsert_google_user(user_info)
+        app_token = create_access_token(db_user["google_id"], email=db_user.get("email"))
 
-        request.session["user"] = {
-            "sub": user_info["sub"],
-            "email": user_info.get("email"),
-            "name": user_info.get("name"),
-            "picture": user_info.get("picture"),
-        }
+        db_user["sub"] = db_user["google_id"]
+        request.session["user"] = db_user
 
-        response = JSONResponse({
-            "message": "Google OAuth login successful",
-            "token": app_token,
-            "user": request.session["user"],
-        })
+        response = RedirectResponse(url=FRONTEND_URL)
         response.set_cookie(
             key="access_token",
             value=app_token,
@@ -126,21 +93,16 @@ def issue_token(request: Request, payload: GoogleOAuthCallbackRequest):
             raise HTTPException(status_code=400, detail="No ID token returned from Google")
 
         user_info = validate_google_id_token(id_token)
-        app_token = create_access_token(user_info["sub"], email=user_info.get("email"))
+        db_user = upsert_google_user(user_info)
+        app_token = create_access_token(db_user["google_id"], email=db_user.get("email"))
 
-        user_data = {
-            "sub": user_info["sub"],
-            "email": user_info.get("email"),
-            "name": user_info.get("name"),
-            "picture": user_info.get("picture"),
-        }
-
-        request.session["user"] = user_data
+        db_user["sub"] = db_user["google_id"]
+        request.session["user"] = db_user
 
         response = JSONResponse({
             "access_token": app_token,
             "token_type": "bearer",
-            "user": user_data,
+            "user": db_user,
         })
         response.set_cookie(
             key="access_token",
@@ -157,7 +119,21 @@ def issue_token(request: Request, payload: GoogleOAuthCallbackRequest):
 
 @router.get("/me")
 def get_me(current_user: dict = Depends(get_current_user)):
-    """Retrieve authenticated user's information."""
+    """Retrieve authenticated user's information from MongoDB."""
+    from config.db import db
+    from models.user_model import serialize_user
+    
+    google_id = current_user.get("sub") or current_user.get("google_id")
+    if db is not None and google_id:
+        try:
+            user_doc = db.users.find_one({"google_id": google_id})
+            if user_doc:
+                db_user = serialize_user(user_doc)
+                db_user["sub"] = db_user["google_id"]
+                return {"user": db_user}
+        except Exception:
+            pass
+            
     return {"user": current_user}
 
 

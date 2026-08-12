@@ -42,7 +42,14 @@ def chat_with_langflow(message: str, session_id: str) -> ChatResponse:
     response = requests.post(LANGFLOW_URL, json=payload, headers=HEADERS, timeout=60)
     response.raise_for_status()
 
-    data = response.json()
+    try:
+        data = response.json()
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            f"Expected JSON from Langflow but received non-JSON (Status: {response.status_code}). "
+            f"Body Snippet: {response.text[:200]}"
+        ) from exc
+
     ai_message = extract_message(data)
 
     return ChatResponse(

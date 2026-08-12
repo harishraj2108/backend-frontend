@@ -5,11 +5,7 @@ export default function LoginPage({ navigate, onLogin }) {
 
   const handleGoogle = () => {
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      onLogin({ name: 'Google User' })
-      navigate('dashboard')
-    }, 1500)
+    window.location.href = 'http://localhost:8000/auth/google/login?redirect=true'
   }
 
   return (
@@ -43,10 +39,13 @@ export default function LoginPage({ navigate, onLogin }) {
               background: 'linear-gradient(135deg, #00d4ff, #7c3aed)',
               borderRadius: 14,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '1.6rem',
+              fontSize: '1.2rem',
+              fontWeight: 700,
+              color: '#000',
               margin: '0 auto 1.25rem',
               boxShadow: '0 0 30px rgba(0,212,255,0.3)',
-            }}>🤖</div>
+              fontFamily: 'Syne, sans-serif'
+            }}>N</div>
             <h1 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: '1.7rem', color: 'var(--foreground)', letterSpacing: '-0.02em', marginBottom: '0.5rem' }}>
               Welcome to NexAgent
             </h1>

@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / ".env", override=True)
 
 LANGFLOW_URL = os.getenv("LANGFLOW_URL", "")
+LANGFLOW_API_KEY = os.getenv("LANGFLOW_API_KEY", "")
 API_KEY = os.getenv("SCRAPEGRAPH_API_KEY", "")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", API_KEY)
 PORT = int(os.getenv("PORT", 8000))
@@ -15,9 +16,12 @@ GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "")
 SESSION_SECRET_KEY = os.getenv("SESSION_SECRET_KEY", "super-secret-session-key-change-in-production-1234567890")
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "super-secret-jwt-key-change-in-production-1234567890")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/nexagent")
 
 HEADERS = {
-    "x-api-key": API_KEY,
+    "x-api-key": LANGFLOW_API_KEY,
+    "Authorization": "Bearer " + LANGFLOW_API_KEY if LANGFLOW_API_KEY else "",
     "Content-Type": "application/json",
 }
 
